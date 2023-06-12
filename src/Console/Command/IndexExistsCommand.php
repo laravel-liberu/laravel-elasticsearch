@@ -17,16 +17,9 @@ final class IndexExistsCommand extends Command
     protected $signature = 'laravel-elasticsearch:utils:index-exists
                             {index-name : The index name}';
 
-    /**
-     * @var Client
-     */
-    private $client;
-
     public function __construct(
-        Client $client
+        private readonly Client $client
     ) {
-        $this->client = $client;
-
         parent::__construct();
     }
 

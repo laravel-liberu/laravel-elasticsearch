@@ -40,7 +40,6 @@ class Factory
      * Make the Elasticsearch client for the given named configuration, or
      * the default client.
      *
-     * @param array $config
      *
      * @return \Elasticsearch\Client
      */
@@ -52,12 +51,12 @@ class Factory
     /**
      * Build and configure an Elasticsearch client.
      *
-     * @param array $config
      *
      * @return \Elasticsearch\Client
      */
     protected function buildClient(array $config): Client
     {
+        $host = [];
         $clientBuilder = ClientBuilder::create();
 
         // Configure hosts
@@ -101,7 +100,7 @@ class Factory
                 $clientBuilder->setHandler(function (array $request) use ($host) {
                     $psr7Handler = \Aws\default_http_handler();
                     $signer = new \Aws\Signature\SignatureV4('es', $host['aws_region']);
-                    $request['headers']['Host'][0] = parse_url($request['headers']['Host'][0])['host'] ?? $request['headers']['Host'][0];
+                    $request['headers']['Host'][0] = parse_url((string) $request['headers']['Host'][0])['host'] ?? $request['headers']['Host'][0];
 
                     // Create a PSR-7 request from the array passed to the handler
                     $psr7Request = new Request(
@@ -158,11 +157,7 @@ class Factory
 
                     // Send the signed request to Amazon ES
                     $response = $psr7Handler($signedRequest, ['http_stats_receiver' => $http_stats])
-                        ->then(function (ResponseInterface $response) {
-                            return $response;
-                        }, function ($error) {
-                            return $error['response'];
-                        })
+                        ->then(fn(ResponseInterface $response) => $response, fn($error) => $error['response'])
                         ->wait();
 
                     // Convert the PSR-7 response to a RingPHP response

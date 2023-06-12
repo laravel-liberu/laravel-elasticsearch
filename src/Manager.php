@@ -34,10 +34,6 @@ class Manager
      */
     protected $connections = [];
 
-    /**
-     * @param \Illuminate\Contracts\Container\Container $app
-     * @param \Cviebrock\LaravelElasticsearch\Factory $factory
-     */
     public function __construct(Container $app, Factory $factory)
     {
         $this->app = $app;
@@ -76,8 +72,6 @@ class Manager
 
     /**
      * Set the default connection.
-     *
-     * @param string $connection
      */
     public function setDefaultConnection(string $connection): void
     {
@@ -87,7 +81,6 @@ class Manager
     /**
      * Make a new connection.
      *
-     * @param string $name
      *
      * @return \Elasticsearch\Client
      */
@@ -130,8 +123,6 @@ class Manager
     /**
      * Dynamically pass methods to the default connection.
      *
-     * @param  string $method
-     * @param  array $parameters
      *
      * @return mixed
      */

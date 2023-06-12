@@ -20,16 +20,9 @@ final class AliasSwitchIndexCommand extends Command
                             {old-index-name : The old index name}
                             {alias-name : The alias name}';
 
-    /**
-     * @var Client
-     */
-    private $client;
-
     public function __construct(
-        Client $client
+        private readonly Client $client
     ) {
-        $this->client = $client;
-
         parent::__construct();
     }
 

@@ -18,16 +18,9 @@ final class IndexCreateCommand extends Command
     protected $signature = 'laravel-elasticsearch:utils:index-create
                             {index-name : The index name}';
 
-    /**
-     * @var Client
-     */
-    private $client;
-
     public function __construct(
-        Client $client
+        private readonly Client $client
     ) {
-        $this->client = $client;
-
         parent::__construct();
     }
 

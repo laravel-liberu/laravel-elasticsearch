@@ -20,23 +20,10 @@ final class IndexCreateOrUpdateMappingCommand extends Command
                             {index-name : The index name}
                             {mapping-file-path : The absolute path where mapping file is located}';
 
-    /**
-     * @var Client
-     */
-    private $client;
-
-    /**
-     * @var Filesystem
-     */
-    private $filesystem;
-
     public function __construct(
-        Client $client,
-        Filesystem $filesystem
+        private readonly Client $client,
+        private readonly Filesystem $filesystem
     ) {
-        $this->client = $client;
-        $this->filesystem = $filesystem;
-
         parent::__construct();
     }
 
@@ -60,7 +47,9 @@ final class IndexCreateOrUpdateMappingCommand extends Command
                     'index' => $indexName,
                     'body'  => json_decode(
                         $this->filesystem->get($mappingFilePath),
-                        true
+                        true,
+                        512,
+                        JSON_THROW_ON_ERROR
                     ),
                 ]);
             } catch (Throwable $exception) {
@@ -92,7 +81,9 @@ final class IndexCreateOrUpdateMappingCommand extends Command
                 'index' => $indexName,
                 'body'  => json_decode(
                     $this->filesystem->get($mappingFilePath),
-                    true
+                    true,
+                    512,
+                    JSON_THROW_ON_ERROR
                 ),
             ]);
         } catch (Throwable $exception) {

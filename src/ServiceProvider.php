@@ -40,19 +40,13 @@ class ServiceProvider extends BaseServiceProvider
     {
         $app = $this->app;
 
-        $app->singleton('elasticsearch.factory', function($app) {
-            return new Factory();
-        });
+        $app->singleton('elasticsearch.factory', fn($app) => new Factory());
 
-        $app->singleton('elasticsearch', function($app) {
-            return new Manager($app, $app['elasticsearch.factory']);
-        });
+        $app->singleton('elasticsearch', fn($app) => new Manager($app, $app['elasticsearch.factory']));
 
         $app->alias('elasticsearch', Manager::class);
 
-        $app->singleton(Client::class, function(Container $app) {
-            return $app->make('elasticsearch')->connection();
-        });
+        $app->singleton(Client::class, fn(Container $app) => $app->make('elasticsearch')->connection());
     }
 
     protected function setUpConfig(): void
